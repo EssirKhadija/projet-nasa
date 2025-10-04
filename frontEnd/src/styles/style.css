@@ -196,3 +196,10 @@ a {
     padding: 1.5rem;
   }
 }
+
+.app {
+  backdrop-filter: blur(2px);
+  position: relative;
+  filter: brightness(0.4) contrast(1.1) saturate(0.8);
+  background-image: url('./images/Loop Space GIF.gif');
+}
