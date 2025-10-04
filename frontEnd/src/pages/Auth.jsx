@@ -1,13 +1,14 @@
 import { useState } from 'react';
 
-export default function Auth() {
+export default function AuthComponent() {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: ''
   });
-  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
 
   const handleChange = (e) => {
@@ -15,10 +16,14 @@ export default function Auth() {
       ...formData,
       [e.target.name]: e.target.value
     });
+    setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+
     const endpoint = isLogin ? 'login.php' : 'register.php';
     const data = isLogin 
       ? { username: formData.username, password: formData.password }
@@ -35,16 +40,20 @@ export default function Auth() {
       });
 
       const result = await response.json();
-      setMessage(result.message);
 
       if (result.success && isLogin) {
         setUser(result.user);
       } else if (result.success && !isLogin) {
         setIsLogin(true);
         setFormData({ username: '', email: '', password: '' });
+      } else {
+        setError(result.message || 'Operation failed');
       }
-    } catch (error) {
-      setMessage('Connection error: ' + error.message);
+    } catch (err) {
+      setError('Connection error. Please try again.');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,26 +67,22 @@ export default function Auth() {
       if (result.success) {
         setUser(null);
         setFormData({ username: '', email: '', password: '' });
-        setMessage('Logged out successfully');
       }
     } catch (error) {
-      setMessage('Logout error: ' + error.message);
+      setError('Logout error: ' + error.message);
     }
   };
 
   if (user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Welcome, {user.username}!</h2>
-          <div className="bg-green-50 border border-green-200 rounded p-4 mb-6">
-            <p className="text-gray-700"><strong>Username:</strong> {user.username}</p>
-            <p className="text-gray-700"><strong>Email:</strong> {user.email}</p>
+      <div className="auth-page">
+        <div className="auth-container">
+          <h1>Welcome, {user.username}!</h1>
+          <div className="form-group">
+            <p><strong>Username:</strong> {user.username}</p>
+            <p><strong>Email:</strong> {user.email}</p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-lg transition duration-200"
-          >
+          <button onClick={handleLogout} className="btn btn-auth">
             Logout
           </button>
         </div>
@@ -86,78 +91,73 @@ export default function Auth() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          {isLogin ? 'Login' : 'Register'}
-        </h2>
+    <div className="auth-page">
+      <div className="auth-container">
+        <h1>{isLogin ? 'Login to Your Account' : 'Create New Account'}</h1>
+        
+        {error && <div className="error-message">{error}</div>}
 
-        {message && (
-          <div className={`p-3 rounded mb-4 ${
-            message.includes('successful') 
-              ? 'bg-green-100 text-green-700' 
-              : 'bg-red-100 text-red-700'
-          }`}>
-            {message}
-          </div>
-        )}
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">Username</label>
+        <div className="auth-form">
+          <div className="form-group">
+            <label>Username</label>
             <input
               type="text"
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your username"
+              required
             />
           </div>
 
           {!isLogin && (
-            <div>
-              <label className="block text-gray-700 font-medium mb-2">Email</label>
+            <div className="form-group">
+              <label>Email Address</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your email"
+                required
               />
             </div>
           )}
 
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">Password</label>
+          <div className="form-group">
+            <label>Password</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your password"
+              required
             />
           </div>
 
-          <button
-            onClick={handleSubmit}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition duration-200"
+          <button 
+            onClick={handleSubmit} 
+            className="btn btn-auth" 
+            disabled={loading}
           >
-            {isLogin ? 'Login' : 'Register'}
+            {loading ? '...' : (isLogin ? 'Login' : 'Register')}
           </button>
         </div>
 
-        <div className="mt-6 text-center">
-          <button
+        <p className="auth-link">
+          {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}
+          <span 
             onClick={() => {
               setIsLogin(!isLogin);
-              setMessage('');
+              setError('');
               setFormData({ username: '', email: '', password: '' });
             }}
-            className="text-blue-500 hover:text-blue-600 font-medium"
+            style={{ cursor: 'pointer', color: '#0066cc', textDecoration: 'underline' }}
           >
-            {isLogin ? "Don't have an account? Register" : "Already have an account? Login"}
-          </button>
-        </div>
+            {isLogin ? 'Register here' : 'Login here'}
+          </span>
+        </p>
       </div>
     </div>
   );
