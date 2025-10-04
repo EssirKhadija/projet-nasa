@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function AuthComponent() {
+export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: '',
@@ -25,7 +25,7 @@ export default function AuthComponent() {
       : formData;
 
     try {
-      const response = await fetch(`http://localhost/projet-nasa/backEnd/${endpoint}`, {
+      const response = await fetch(`http://localhost/your_project/${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export default function AuthComponent() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost/projet-nasa/backEnd/logout.php', {
+      const response = await fetch('http://localhost/your_project/logout.php', {
         credentials: 'include'
       });
       const result = await response.json();

@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQuiz } from "../context/QuizContext";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 const Navbar = () => {
-  const { language } = useQuiz();
+  const { language, user, logout } = useQuiz();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = {
@@ -13,22 +14,25 @@ const Navbar = () => {
       { path: "/", label: "Home" },
       { path: "/quiz", label: "Take Quiz" },
       { path: "/about", label: "About Us" },
-      { path: "/faq", label: "FAQ" },
-      { path: "/reg", label: "Register" }
+      { path: "/faq", label: "FAQ" }
     ],
     fr: [
       { path: "/", label: "Accueil" },
       { path: "/quiz", label: "Quiz" },
       { path: "/about", label: "À propos" },
-      { path: "/faq", label: "FAQ" },
-      { path: "/reg", label: "Register" }
-
+      { path: "/faq", label: "FAQ" }
     ]
   };
 
   const items = navItems[language];
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+    setIsMenuOpen(false);
+  };
 
   return (
     <nav className="navbar">
@@ -54,6 +58,24 @@ const Navbar = () => {
               {item.label}
             </Link>
           ))}
+
+          {user ? (
+            <div className="nav-user">
+              <span className="user-name">👤 {user.username}</span>
+              <button onClick={handleLogout} className="btn-logout">
+                {language === "en" ? "Logout" : "Déconnexion"}
+              </button>
+            </div>
+          ) : (
+            <Link 
+              to="/login" 
+              className="btn-login"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {language === "en" ? "Login" : "Connexion"}
+            </Link>
+          )}
+
           <div className="nav-lang">
             <LanguageSwitcher />
           </div>
