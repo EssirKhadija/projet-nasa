@@ -13,13 +13,16 @@ const Navbar = () => {
       { path: "/", label: "Home" },
       { path: "/quiz", label: "Take Quiz" },
       { path: "/about", label: "About Us" },
-      { path: "/faq", label: "FAQ" }
+      { path: "/faq", label: "FAQ" },
+      { path: "/reg", label: "Register" }
     ],
     fr: [
       { path: "/", label: "Accueil" },
       { path: "/quiz", label: "Quiz" },
       { path: "/about", label: "À propos" },
-      { path: "/faq", label: "FAQ" }
+      { path: "/faq", label: "FAQ" },
+      { path: "/reg", label: "Register" }
+
     ]
   };
 
