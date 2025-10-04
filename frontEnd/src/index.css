@@ -2,12 +2,33 @@ html, body, #root {
   height: 100%; 
   margin: 0;
   padding: 0;
+  background: transparent;
 }
 
 body { 
-  background-color: #0b0e1a;
+  background-color: #1a1f35;
   color: white;
   font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  position: relative;
+}
+
+/* Background GIF qui couvre TOUTE la page */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../src/assets/images/Loop-space-gif.gif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.7);
+  opacity: 0.5;
+  z-index: -1;
 }
 
 .container { 
@@ -24,12 +45,12 @@ body {
 }
 
 .btn-primary { 
-  background-color: #4f46e5;
+  background-color: #5b9fff;
   color: white;
 }
 
 .btn-primary:hover { 
-  background-color: #6366f1;
+  background-color: #7eb2ff;
 }
 
 .btn-ghost { 
