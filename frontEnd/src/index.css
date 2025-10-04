@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html, body, #root { height: 100%; }
+body { @apply bg-space-900 text-white font-sans; }
+
+
+/* simple container */
+.container { @apply max-w-4xl mx-auto px-4; }
+
+
+.btn { @apply px-4 py-2 rounded-md font-medium focus:outline-none; }
+.btn-primary { @apply bg-indigo-600 hover:bg-indigo-500 text-white; }
+.btn-ghost { @apply bg-transparent border border-white/10; }
