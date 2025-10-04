@@ -5,8 +5,9 @@ import Quiz from "./pages/Quiz";
 import Result from "./pages/Result";
 import About from "./pages/About";
 import FAQ from "./pages/FAQ";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Navbar from "./components/Navbar";
-import Register from './pages/Register';
 import { QuizProvider } from "./context/QuizContext";
 import "./styles/style.css";
 
@@ -22,10 +23,11 @@ function App() {
             <Route path="/result" element={<Result />} />
             <Route path="/about" element={<About />} />
             <Route path="/faq" element={<FAQ />} />
-            <Route path="/reg" element={<Register />} />
-          </Routes> 
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Routes>
         </main>
-        <footer className="footer">© 2025 NASA Hackathon - by Khadija</footer>
+        <footer className="footer">© 2025 NASA Hackathon</footer>
       </div>
     </QuizProvider>
   );
