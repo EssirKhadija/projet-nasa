@@ -1,30 +1,39 @@
 <?php
-include "db.php";
+require_once 'db.php';
+session_start();
 
-$data = json_decode(file_get_contents("php://input"), true);
+$data = json_decode(file_get_contents("php://input"));
 
-if (isset($data["email"], $data["password"])) {
-    $email = trim($data["email"]);
-    $password = trim($data["password"]);
+if (empty($data->username) || empty($data->password)) {
+    echo json_encode(["success" => false, "message" => "All fields are required"]);
+    exit();
+}
 
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch();
+$username = htmlspecialchars($data->username);
+$password = $data->password;
 
-    if ($user && password_verify($password, $user["password"])) {
+try {
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
+    $stmt->execute([$username, $username]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $user['username'];
+        
         echo json_encode([
             "success" => true,
             "message" => "Login successful",
             "user" => [
-                "id" => $user["id"],
-                "username" => $user["username"],
-                "email" => $user["email"]
+                "id" => $user['id'],
+                "username" => $user['username'],
+                "email" => $user['email']
             ]
         ]);
     } else {
-        echo json_encode(["success" => false, "error" => "Invalid credentials"]);
+        echo json_encode(["success" => false, "message" => "Invalid credentials"]);
     }
-} else {
-    echo json_encode(["success" => false, "error" => "Invalid input"]);
+} catch(PDOException $e) {
+    echo json_encode(["success" => false, "message" => "Login failed: " . $e->getMessage()]);
 }
 ?>
