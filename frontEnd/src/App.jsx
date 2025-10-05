@@ -5,7 +5,6 @@ import Quiz from "./pages/Quiz";
 import Result from "./pages/Result";
 import About from "./pages/About";
 import FAQ from "./pages/FAQ";
-import Login from "./pages/Login";
 import Auth from "./pages/Auth";
 import Navbar from "./components/Navbar";
 import { QuizProvider } from "./context/QuizContext";
