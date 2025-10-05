@@ -11,13 +11,13 @@ const Navbar = () => {
 
   const navItems = {
     en: [
-      { path: "/", label: "Home" },
+      { path: "/home", label: "Home" },
       { path: "/quiz", label: "Take Quiz" },
       { path: "/about", label: "About Us" },
       { path: "/faq", label: "FAQ" }
     ],
     fr: [
-      { path: "/", label: "Accueil" },
+      { path: "/home", label: "Accueil" },
       { path: "/quiz", label: "Quiz" },
       { path: "/about", label: "À propos" },
       { path: "/faq", label: "FAQ" }
@@ -37,7 +37,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="nav-container">
-        <Link to="/" className="nav-logo">
+        <Link to="/home" className="nav-logo">  {/* Changé de "/" à "/home" */}
           🚀 Space Careers Matchmaker
         </Link>
 
@@ -67,8 +67,8 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <Link 
-              to="/login" 
+            <Link
+              to="/login"
               className="btn-login"
               onClick={() => setIsMenuOpen(false)}
             >
